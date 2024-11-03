@@ -1,5 +1,6 @@
 ﻿using InoaB3.Managers;
 using InoaB3.Models;
+using InoaB3.Observer;
 
 // Chama a API com a cotação solicitada e verifica o valor atual.
 class Program 
@@ -30,8 +31,19 @@ class Program
         
         try
         {
+            // Configurar para pegar a lista de emails cadastrados
+            // Usar exemplo de destinationEmail
+            string destinationEmail = "phbschneider@hotmail.com";
+            EmailAlert emailAlert = new EmailAlert(quoteName, sellPrice, buyPrice, destinationEmail);
+
             Quote quote = await StockMarketManager.GetQuoteAsync(endpoint);
 
+            StockMarketNotification stockNotification = new StockMarketNotification(quoteName, quote.regularMarketPrice);
+
+            stockNotification.Attach(emailAlert);
+
+            stockNotification.UpdateStockPrice(quote.regularMarketPrice);
+            
             Console.WriteLine($"Resultado da chamada da api: {quote.regularMarketPrice}");
 
             if (quote.regularMarketPrice >= sellPrice)
