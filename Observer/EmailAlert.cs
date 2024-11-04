@@ -1,5 +1,4 @@
 // Esse é meu observer
-using System.Net.Mail;
 using InoaB3.Services.SendEmail;
 using InoaB3.Observer;
 
@@ -25,13 +24,22 @@ public class EmailAlert : IObserver<double>
     // Método para mandar uma notificação de preço atualizado, chamado quando atualizar o preço
     public void OnNext(double regularMarketPrice)
     {
-        if (regularMarketPrice >= _sellQuote)
+        try{
+            if (regularMarketPrice >= _sellQuote)
+            {
+                SendEmail(_destinationEmail, $"Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
+            }
+            else if (regularMarketPrice <= _buyQuote)
+            {
+                SendEmail(_destinationEmail, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
+            }
+            else{
+                Console.WriteLine($"Preço de {_quoteName} está dentro da faixa.");
+            }
+        }   
+        catch (Exception ex)
         {
-            SendEmail(_destinationEmail, $"Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
-        }
-        else if (regularMarketPrice <= _buyQuote)
-        {
-            SendEmail(_destinationEmail, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
+            Console.WriteLine($"Erro ao monitorar {_quoteName}: {ex.Message}");
         }
     }
     // Método chamado se ocorrer um erro
@@ -48,23 +56,29 @@ public class EmailAlert : IObserver<double>
 
     public void Update(double regularMarketPrice)
     {
-        if (regularMarketPrice >= _sellQuote && !_hasSentSellAlert)
-        {
-            SendEmail(_destinationEmail, "Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
-            _hasSentSellAlert = true;
-            _hasSentBuyAlert = false;
+        try{
+            if (regularMarketPrice >= _sellQuote && !_hasSentSellAlert)
+            {
+                SendEmail(_destinationEmail, "Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
+                _hasSentSellAlert = true;
+                _hasSentBuyAlert = false;
+            }
+            else if (regularMarketPrice <= _buyQuote && !_hasSentBuyAlert)
+            {
+                SendEmail(_destinationEmail, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
+                _hasSentBuyAlert = true;
+                _hasSentSellAlert = false;
+            }
+            else if (regularMarketPrice > _buyQuote && regularMarketPrice < _sellQuote)
+            {
+                // Reset flags se o preço estiver na faixa desejada
+                _hasSentSellAlert = false;
+                _hasSentBuyAlert = false;
+            }
         }
-        else if (regularMarketPrice <= _buyQuote && !_hasSentBuyAlert)
+        catch (Exception ex)
         {
-            SendEmail(_destinationEmail, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
-            _hasSentBuyAlert = true;
-            _hasSentSellAlert = false;
-        }
-        else if (regularMarketPrice > _buyQuote && regularMarketPrice < _sellQuote)
-        {
-            // Reset flags se o preço estiver na faixa desejada
-            _hasSentSellAlert = false;
-            _hasSentBuyAlert = false;
+            Console.WriteLine($"Erro ao monitorar {_quoteName}: {ex.Message}");
         }
     }
 

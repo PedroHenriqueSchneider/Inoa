@@ -1,12 +1,8 @@
-// Esse é meu subject 
-/* Quando algo mudar no subject o observer será notificado, assim, quando uma ação ultrapassar algum dos limites, tanto inferior, 
-quanto superior, o observer será notificado e enviará um email para o usuário. */
-
 namespace InoaB3.Observer;
 
-public class StockMarketNotification : ISubject
+public class StockMarketNotification : ISubject 
 {
-    private List<IObserver> _observers = new List<IObserver>(); // Lista de emails
+    private List<IObserver<double>> _observers = new List<IObserver<double>>(); // Lista de emails
     private readonly string _stockName;
     private double _stockPrice; 
 
@@ -16,19 +12,22 @@ public class StockMarketNotification : ISubject
         _stockPrice = stockPrice;
     }
 
-    // Conferir se será necessário
-    public void Attach(IObserver observer)
+    public void Attach(IObserver<double> observer)
     {
-        // Assim eu confiro antes se contem o observer na lista
-        if (!_observers.Contains(observer))
+        try
         {
-            _observers.Add(observer);
+            if (!_observers.Contains(observer))
+            {
+                _observers.Add(observer);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao adicionar observador: {ex.Message}");
         }
     }
 
-    // Conferir se será necessário
-    // Talvez não seja necessário, mas manter o padrão do observer
-    public void Detach(IObserver observer)
+    public void Detach(IObserver<double> observer)
     {
         if (_observers.Contains(observer))
         {
@@ -36,35 +35,25 @@ public class StockMarketNotification : ISubject
         }
     }
 
-    // Notifica os observadores
-    public void Notify(double stockPrice)
-    {
-        foreach (var observer in _observers)
-        {
-            observer.Update(stockPrice);
-        }
-    }
-
-    // Ainda não tenho certeza de como será usado e se será necessário
-    // Como referência para uso do display dos dados
     public void UpdateStockPrice(double stockPrice)
     {
-        _stockPrice = stockPrice;
-
-        foreach (var observer in _observers)
+        try
         {
-            (observer as IObserver<decimal>)?.OnNext((decimal)stockPrice);
+            Console.WriteLine("Necessário atualizar o preço da ação");
+            _stockPrice = stockPrice;
+
+            foreach (var observer in _observers)
+            {
+                observer.OnNext(stockPrice); // Notifica todos os observadores
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao atualizar o preço da ação: {ex.Message}");
         }
     }
 
-    public string GetStockName()
-    {
-        return _stockName;
-    }
+    public string GetStockName() => _stockName;
 
-    // Para pegar o preço e então conseguir comparar com o limite definido e disparar o email
-    public double GetStockPrice()
-    {
-        return _stockPrice;
-    }
+    public double GetStockPrice() => _stockPrice;
 }

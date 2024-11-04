@@ -1,6 +1,7 @@
 ﻿using InoaB3.Managers;
 using InoaB3.Models;
 using InoaB3.Observer;
+using System.Globalization;
 
 // Chama a API com a cotação solicitada e verifica o valor atual.
 class Program 
@@ -15,15 +16,23 @@ class Program
         string quoteSellPrice = args[1];
         string quoteBuyPrice = args[2];
 
-        if (!float.TryParse(quoteSellPrice, out float sellPrice))
+        if (float.TryParse(quoteSellPrice, NumberStyles.Float, CultureInfo.InvariantCulture, out float sellPrice))
         {
-            Console.WriteLine("O preço de venda fornecido não é um número válido.");
+            Console.WriteLine($"Preço de venda convertido: {sellPrice}"); // Saída esperada: 22.59
+        }
+        else
+        {
+            Console.WriteLine("Conversão do preço de venda falhou");
             return;
         }
 
-        if (!float.TryParse(quoteBuyPrice, out float buyPrice))
+        if (float.TryParse(quoteBuyPrice, NumberStyles.Float, CultureInfo.InvariantCulture, out float buyPrice))
         {
-            Console.WriteLine("O preço de compra fornecido não é um número válido.");
+            Console.WriteLine($"Preço de compra convertido: {buyPrice}"); // Saída esperada
+        }
+        else
+        {
+            Console.WriteLine("Conversão do preço de compra falhou");
             return;
         }
 
@@ -42,7 +51,7 @@ class Program
 
             stockNotification.Attach(emailAlert);
 
-            stockNotification.UpdateStockPrice(quote.regularMarketPrice);
+            stockNotification.UpdateStockPrice(quote.regularMarketPrice); // a partir daqui temos o envio de email
             
             Console.WriteLine($"Resultado da chamada da api: {quote.regularMarketPrice}");
 

@@ -1,18 +1,20 @@
 using System;
 using System.Net;
 using System.Net.Mail;
+using System.Configuration;
 
 namespace InoaB3.Services.SendEmail
 {
     public class SendEmail
     {
-        private readonly SmtpClient? _smtpClient;
 
         public void Send(string email, string subject, string body)
         {
             try
             {
-                if(_smtpClient == null)
+                SmtpClient smtpClient = new SmtpClient();
+
+                if(smtpClient == null)
                 {
                     throw new InvalidOperationException("SmtpClient não foi inicializado.");
                 }
@@ -23,7 +25,9 @@ namespace InoaB3.Services.SendEmail
                 //smtpClient.Timeout = 60*60;
 
                 //smtpClient.UseDefaultCredentials = false;
-                _smtpClient.Credentials = new NetworkCredential();
+                //smtpClient.Credentials = new NetworkCredential();
+
+                Console.WriteLine($"O email de envio é: {email}, o assunto é: {subject} e o corpo é: {body}");
 
                 // Create a new Attachment object
                 //Attachment attachment = new Attachment("path_to_attachment_file.txt");
@@ -38,7 +42,7 @@ namespace InoaB3.Services.SendEmail
                 mail.Priority = MailPriority.Normal;
                 mail.To.Add(email);
 
-                _smtpClient.Send(mail);
+                smtp.Send(mail);
             }
             catch (Exception ex)
             {
