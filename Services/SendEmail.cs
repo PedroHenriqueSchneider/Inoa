@@ -1,53 +1,62 @@
 using System;
 using System.Net;
 using System.Net.Mail;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace InoaB3.Services.SendEmail
 {
     public class SendEmail
     {
-
         public void Send(string email, string subject, string body)
         {
             try
             {
-                SmtpClient smtpClient = new SmtpClient();
+               IConfiguration configuration = new ConfigurationBuilder()
+                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .Build();
 
-                if(smtpClient == null)
+                // Lê as configurações
+                string smtpServer = configuration["EmailSettings:SmtpServer"];
+                int smtpPort = int.Parse(configuration["EmailSettings:SmtpPort"]);  
+
+                string smtpUserName = configuration["EmailSettings:SmtpUserName"];
+                string smtpPassword = configuration["EmailSettings:SmtpPassword"];
+                bool enableSsl = bool.Parse(configuration["EmailSettings:EnableSsl"]);
+                int timeout = int.Parse(configuration["EmailSettings:Timeout"]);
+
+                Console.WriteLine($"SMTP Server: {smtpServer}");
+                Console.WriteLine($"SMTP Port: {smtpPort}");
+                Console.WriteLine($"SMTP User Name: {smtpUserName}");
+                Console.WriteLine($"Enable SSL: {enableSsl}");
+                Console.WriteLine($"Timeout: {timeout}");
+
+                SmtpClient smtpClient = new SmtpClient(smtpServer)
                 {
-                    throw new InvalidOperationException("SmtpClient não foi inicializado.");
-                }
+                    Port = smtpPort,
+                    Credentials = new System.Net.NetworkCredential(smtpUserName, smtpPassword),
+                    EnableSsl = enableSsl,
+                    Timeout = timeout
+                };
 
-                MailMessage mail = new MailMessage();
+                MailMessage mail = new MailMessage
+                {
+                    From = new MailAddress("pedro@d419d6c33b819176.maileroo.org"),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true,
+                    Priority = MailPriority.Normal
+                };
 
-                //smtpClient.EnableSsl = true;
-                //smtpClient.Timeout = 60*60;
-
-                //smtpClient.UseDefaultCredentials = false;
-                //smtpClient.Credentials = new NetworkCredential();
-
-                Console.WriteLine($"O email de envio é: {email}, o assunto é: {subject} e o corpo é: {body}");
-
-                // Create a new Attachment object
-                //Attachment attachment = new Attachment("path_to_attachment_file.txt");
-
-                // Add the attachment to the MailMessage object
-                //message.Attachments.Add(another_attachment.pdf);
-
-                mail.From = new MailAddress("julia.antiqueira1995@gmail.com");
-                mail.Body = body; 
-                mail.Subject = subject; 
-                mail.IsBodyHtml = true;
-                mail.Priority = MailPriority.Normal;
                 mail.To.Add(email);
+                
+                Console.WriteLine($"Enviando e-mail para: {email}, Assunto: {subject}");
 
-                smtp.Send(mail);
+                smtpClient.Send(mail);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erro ao enviar email: " + ex.Message);
-                return;
+                Console.WriteLine("Erro ao enviar email: " + ex.Message + "\n" + ex.StackTrace);
             }
         }
     }
