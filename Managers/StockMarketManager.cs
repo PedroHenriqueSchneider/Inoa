@@ -17,8 +17,10 @@ namespace InoaB3.Managers
                     .Build();
 
                 // Lê as configurações
-                string baseAddress = configuration["ApiSettings:BaseAddress"];
-                string apiToken = configuration["ApiSettings:ApiToken"]; 
+                string baseAddress = configuration["ApiSettings:BaseAddress"]
+                                ?? throw new InvalidOperationException("BaseAddress não pode ser nulo.");
+                string apiToken = configuration["ApiSettings:ApiToken"]
+                                ?? throw new InvalidOperationException("ApiToken não pode ser nulo."); 
 
                 _stockMarketService = new StockMarketService(baseAddress, apiToken);
             }

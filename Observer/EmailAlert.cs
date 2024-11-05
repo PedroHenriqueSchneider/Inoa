@@ -1,8 +1,4 @@
 // Observer
-using InoaB3.Services.SendEmail;
-using InoaB3.Observer;
-using System.Threading.Tasks;
-
 public class EmailAlert(string quoteName, double sellQuote, double buyQuote, List<string> destinationEmail) : IObserver<double>
 {
     private readonly double _sellQuote = sellQuote;
@@ -12,10 +8,10 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
     private bool _hasSentSellAlert = false;
     private bool _hasSentBuyAlert = false;
 
-    public async void OnNext(double regularMarketPrice)
+    public void OnNext(double regularMarketPrice)
     {
         Console.WriteLine("Atualizando...");
-        await UpdateAsync(regularMarketPrice);
+        Update(regularMarketPrice);
     }
 
     public void OnError(Exception error)
@@ -28,7 +24,7 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
         Console.WriteLine($"Monitoramento do ativo {_quoteName} finalizado.");
     }
 
-    public async Task UpdateAsync(double regularMarketPrice)
+    public void Update(double regularMarketPrice)
     {
         try
         {
@@ -36,7 +32,7 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
             {
                 foreach (var email in _destinationEmail)
                 {
-                    await SendEmailAsync(email, "Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
+                    SendEmail(email, "Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
                 }
                 _hasSentSellAlert = true;
                 _hasSentBuyAlert = false;
@@ -45,12 +41,12 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
             {
                 foreach (var email in _destinationEmail)
                 {
-                    await SendEmailAsync(email, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
+                    SendEmail(email, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
                 }
                 _hasSentBuyAlert = true;
                 _hasSentSellAlert = false;
             }
-            else 
+            else
             {
                 Console.WriteLine($"Preço de {_quoteName} está dentro da faixa desejada: {regularMarketPrice}");
                 _hasSentSellAlert = false;
@@ -63,12 +59,12 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
         }
     }
 
-    private static async Task SendEmailAsync(string email, string subject, string body)
+    private static void SendEmail(string email, string subject, string body)
     {
         try
         {
             Console.WriteLine($"Enviando alerta: {subject}");
-            await SendEmail.SendAsync(email, subject, body); // ja que é estatico eu não preciso instanciar o objeto
+            InoaB3.Services.SendEmail.Send(email, subject, body); // ja que é estatico eu não preciso instanciar o objeto
             Console.WriteLine($"Alerta enviado: {subject}");
         }
         catch (Exception ex)

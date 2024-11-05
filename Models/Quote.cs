@@ -2,7 +2,7 @@ namespace InoaB3.Models
 {
     public class Quote
     {
-        public string shortName { get; set; }
-        public double regularMarketPrice { get; set; }
+        public string? ShortName { get; set; }
+        public double RegularMarketPrice { get; set; }
     }
 }

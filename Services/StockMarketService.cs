@@ -4,16 +4,11 @@ using InoaB3.Utils;
 
 namespace InoaB3.Services
 {
-    public class StockMarketService 
+    public class StockMarketService(string baseAddress, string token)
     {
-        private readonly HttpClient _client;
+        private readonly HttpClient _client = HttpClientHelper.GetClient(baseAddress, token);
 
-        public StockMarketService(string baseAddress, string token)
-        {
-            _client = HttpClientHelper.GetClient(baseAddress, token);
-        }
-
-      public async Task<Quote> GetQuoteAsync(string endpoint)
+        public async Task<Quote> GetQuoteAsync(string endpoint)
         {
             try
             {
@@ -23,13 +18,8 @@ namespace InoaB3.Services
                 var quoteResponse = await response.Content.ReadFromJsonAsync<QuoteResponse>()
                                     ?? throw new InvalidOperationException("Dados de cotação são nulos.");
 
-                var quote = quoteResponse.results.FirstOrDefault();
-
-                if (quote == null)
-                {
-                    throw new InvalidOperationException("Nenhuma cotação encontrada.");
-                }
-
+                // coalescence expression
+                var quote = (quoteResponse.Results?.FirstOrDefault()) ?? throw new InvalidOperationException("Nenhuma cotação encontrada.");
                 return quote;
             }
             catch (HttpRequestException httpEx)

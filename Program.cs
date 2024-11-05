@@ -3,7 +3,6 @@ using InoaB3.Models;
 using InoaB3.Observer;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 
 // Chama a API com a cotação solicitada e verifica o valor atual.
 class Program 
@@ -44,7 +43,6 @@ class Program
         {
             // Configurar para pegar a lista de emails cadastrados
             // Usar exemplo de destinationEmail
-            string destinationEmail = "phbschneider@hotmail.com";
 
             IConfiguration configuration = new ConfigurationBuilder()
                     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -52,30 +50,31 @@ class Program
                     .Build();
 
 
-            List<string> emails = new List<string>();
+            List<string> emails = [];
 
             foreach (var email in configuration.GetSection("EmailsList:Emails").GetChildren())
             {
-                emails.Add(email.Value);
+                if(email.Value != null)
+                    emails.Add(email.Value);
             }
 
             EmailAlert emailAlert = new (quoteName, sellPrice, buyPrice, emails);
 
             Quote quote = await StockMarketManager.GetQuoteAsync(endpoint);
 
-            StockMarketNotification stockNotification = new (quoteName, quote.regularMarketPrice);
+            StockMarketNotification stockNotification = new (quoteName, quote.RegularMarketPrice);
 
             stockNotification.Attach(emailAlert);
 
-            stockNotification.UpdateStockPrice(quote.regularMarketPrice); // a partir daqui temos o envio de email
+            stockNotification.UpdateStockPrice(quote.RegularMarketPrice); // a partir daqui temos o envio de email
             
-            Console.WriteLine($"Resultado da chamada da api: {quote.regularMarketPrice}");
+            Console.WriteLine($"Resultado da chamada da api: {quote.RegularMarketPrice}");
 
-            if (quote.regularMarketPrice >= sellPrice)
+            if (quote.RegularMarketPrice >= sellPrice)
             {
                 Console.WriteLine("Preço atual excede o preço de venda. Considere vender.");
             }
-            else if (quote.regularMarketPrice <= buyPrice)
+            else if (quote.RegularMarketPrice <= buyPrice)
             {
                 Console.WriteLine("Preço atual está abaixo do preço de compra. Considere comprar.");
             }
