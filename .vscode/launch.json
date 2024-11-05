@@ -8,7 +8,7 @@
         "type": "coreclr",
         "request": "launch",
         "program": "${workspaceFolder}/bin/Debug/net8.0/InoaB3.dll",
-        "args": ["PETR4", "22.59", "40.90"],
+        "args": ["PETR4", "22.59", "30.90"],
         "console": "internalConsole"
     }],
 }

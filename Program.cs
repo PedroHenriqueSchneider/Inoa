@@ -43,11 +43,11 @@ class Program
             // Configurar para pegar a lista de emails cadastrados
             // Usar exemplo de destinationEmail
             string destinationEmail = "phbschneider@hotmail.com";
-            EmailAlert emailAlert = new EmailAlert(quoteName, sellPrice, buyPrice, destinationEmail);
+            EmailAlert emailAlert = new (quoteName, sellPrice, buyPrice, destinationEmail);
 
             Quote quote = await StockMarketManager.GetQuoteAsync(endpoint);
 
-            StockMarketNotification stockNotification = new StockMarketNotification(quoteName, quote.regularMarketPrice);
+            StockMarketNotification stockNotification = new (quoteName, quote.regularMarketPrice);
 
             stockNotification.Attach(emailAlert);
 
