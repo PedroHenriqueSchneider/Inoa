@@ -4,71 +4,69 @@ using InoaB3.Observer;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
 
-// Chama a API com a cotação solicitada e verifica o valor atual.
-class Program 
+class Program
 {
-    static async Task Main(string[] args)
+    private static string ?quoteName;
+    private static float sellPrice;
+    private static float buyPrice;
+    private static List<string> ?emails;
+    private static EmailAlert ?emailAlert;
+    private static StockMarketNotification ?stockNotification;
+
+    static void Main(string[] args)
     {
-        if(args.Length != 3) {
+        if (args.Length != 3)
+        {
             Console.WriteLine("Por favor, forneça três parâmetros.");
             return;
         }
-        string quoteName = args[0];
-        string quoteSellPrice = args[1];
-        string quoteBuyPrice = args[2];
 
-        if (float.TryParse(quoteSellPrice, NumberStyles.Float, CultureInfo.InvariantCulture, out float sellPrice))
+        quoteName = args[0];
+        // deixei melhor aqui, de forma a deixar o código menor.
+        if (!float.TryParse(args[1], NumberStyles.Float, CultureInfo.InvariantCulture, out sellPrice) ||
+            !float.TryParse(args[2], NumberStyles.Float, CultureInfo.InvariantCulture, out buyPrice))
         {
-            Console.WriteLine($"Preço de venda convertido: {sellPrice}"); // Saída esperada: 22.59
-        }
-        else
-        {
-            Console.WriteLine("Conversão do preço de venda falhou");
+            Console.WriteLine("Conversão dos preços de venda ou compra falhou.");
             return;
         }
 
-        if (float.TryParse(quoteBuyPrice, NumberStyles.Float, CultureInfo.InvariantCulture, out float buyPrice))
+        IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        emails = [];
+
+        foreach (var email in configuration.GetSection("EmailsList:Emails").GetChildren())
         {
-            Console.WriteLine($"Preço de compra convertido: {buyPrice}"); // Saída esperada
-        }
-        else
-        {
-            Console.WriteLine("Conversão do preço de compra falhou");
-            return;
+            if (email.Value != null)
+                emails.Add(email.Value);
         }
 
-        string endpoint = $"{quoteName}?modules=summaryProfile";
-        
+        emailAlert = new EmailAlert(quoteName, sellPrice, buyPrice, emails);
+        stockNotification = new StockMarketNotification(quoteName, 0); // Valor inicial
+
+        var timer = new Timer(async _ => await NotifyPeriodical(), null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+
+        Console.WriteLine("Pressione Enter para encerrar o programa...");
+        Console.ReadLine();
+    }
+
+    private static async Task NotifyPeriodical()
+    {
         try
         {
-            // Configurar para pegar a lista de emails cadastrados
-            // Usar exemplo de destinationEmail
-
-            IConfiguration configuration = new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build();
-
-
-            List<string> emails = [];
-
-            foreach (var email in configuration.GetSection("EmailsList:Emails").GetChildren())
-            {
-                if(email.Value != null)
-                    emails.Add(email.Value);
-            }
-
-            EmailAlert emailAlert = new (quoteName, sellPrice, buyPrice, emails);
-
+            string endpoint = $"{quoteName}?modules=summaryProfile";
             Quote quote = await StockMarketManager.GetQuoteAsync(endpoint);
 
-            StockMarketNotification stockNotification = new (quoteName, quote.RegularMarketPrice);
+            if(stockNotification != null){
+                stockNotification.UpdateStockPrice(quote.RegularMarketPrice);
+                if(emailAlert != null)
+                    stockNotification.Attach(emailAlert);
+                stockNotification.UpdateStockPrice(quote.RegularMarketPrice); // Envia o alerta, se aplicável
+            }
 
-            stockNotification.Attach(emailAlert);
-
-            stockNotification.UpdateStockPrice(quote.RegularMarketPrice); // a partir daqui temos o envio de email
-            
-            Console.WriteLine($"Resultado da chamada da api: {quote.RegularMarketPrice}");
+            Console.WriteLine($"Resultado da chamada da API: {quote.RegularMarketPrice}");
 
             if (quote.RegularMarketPrice >= sellPrice)
             {
@@ -87,10 +85,5 @@ class Program
         {
             Console.WriteLine($"Ocorreu um erro: {ex.Message}");
         }
-
-        Console.WriteLine($"Parâmetro 1: {quoteName}");
-        Console.WriteLine($"Parâmetro 2: {sellPrice}");
-        Console.WriteLine($"Parâmetro 2: {buyPrice}");
-        Console.Write(args.Length);
     }
 }
