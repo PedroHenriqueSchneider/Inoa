@@ -2,6 +2,8 @@
 using InoaB3.Models;
 using InoaB3.Observer;
 using System.Globalization;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 // Chama a API com a cotação solicitada e verifica o valor atual.
 class Program 
@@ -43,7 +45,21 @@ class Program
             // Configurar para pegar a lista de emails cadastrados
             // Usar exemplo de destinationEmail
             string destinationEmail = "phbschneider@hotmail.com";
-            EmailAlert emailAlert = new (quoteName, sellPrice, buyPrice, destinationEmail);
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .Build();
+
+
+            List<string> emails = new List<string>();
+
+            foreach (var email in configuration.GetSection("EmailsList:Emails").GetChildren())
+            {
+                emails.Add(email.Value);
+            }
+
+            EmailAlert emailAlert = new (quoteName, sellPrice, buyPrice, emails);
 
             Quote quote = await StockMarketManager.GetQuoteAsync(endpoint);
 

@@ -3,12 +3,12 @@ using InoaB3.Services.SendEmail;
 using InoaB3.Observer;
 using System.Threading.Tasks;
 
-public class EmailAlert(string quoteName, double sellQuote, double buyQuote, string destinationEmail) : IObserver<double>
+public class EmailAlert(string quoteName, double sellQuote, double buyQuote, List<string> destinationEmail) : IObserver<double>
 {
     private readonly double _sellQuote = sellQuote;
     private readonly double _buyQuote = buyQuote;
     private readonly string _quoteName = quoteName;
-    private readonly string _destinationEmail = destinationEmail;
+    private readonly List<string> _destinationEmail = destinationEmail;
     private bool _hasSentSellAlert = false;
     private bool _hasSentBuyAlert = false;
 
@@ -34,13 +34,19 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, str
         {
             if (regularMarketPrice >= _sellQuote && !_hasSentSellAlert)
             {
-                await SendEmailAsync(_destinationEmail, "Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
+                foreach (var email in _destinationEmail)
+                {
+                    await SendEmailAsync(email, "Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
+                }
                 _hasSentSellAlert = true;
                 _hasSentBuyAlert = false;
             }
             else if (regularMarketPrice <= _buyQuote && !_hasSentBuyAlert)
             {
-                await SendEmailAsync(_destinationEmail, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
+                foreach (var email in _destinationEmail)
+                {
+                    await SendEmailAsync(email, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
+                }
                 _hasSentBuyAlert = true;
                 _hasSentSellAlert = false;
             }
