@@ -11,14 +11,13 @@ Optei por usar uma arquitetura próxima a arquitetura por camadas e mirei direto
 Desenhei o projeto e foquei em cumprir as features principais, já que eu não tinha muito tempo em relação ao tanto que sabia da linguagem.
 
 <h3>Fluxo</h3>
-O fluxo que projetei foi: Receber a entrada dos dados, fazer o request para API, tratar os dados recebidos como resposta, implementar o padrão observer, fazer o envio de emails, consolidar tudo isso de forma a obter consistência e caso sobrasse tempo, desenvolver alguma feature extra.
+Receber a entrada dos dados, fazer o request para API, tratar os dados recebidos como resposta, implementar o padrão observer, fazer o envio de emails, consolidar tudo isso de forma a obter consistência e caso sobrasse tempo, desenvolver alguma feature extra.
 
 Busquei uma API que fosse gratis e me servisse, então fiz uso da API da brapi: https://brapi.dev e utilizei o maileroo: https://maileroo.com/ como SMTP para envio dos emails.
 
 Me dediquei muito a estudar C#, entender sua estrutura para aplicações console, entender padrões de nomenclatura de variáveis, classes, métodos..., e cumprir as funcionalidades básicas, buscando, também deixar tudo modular.
 
 <h3>Organização</h3>
-Organização do sistema:
 Dividi o sistema em: Managers, Models, Services, Utils e Observer.
 Managers: responsável por processar, chamar o service que faz a requisição para a API.
 Services: um deles é responsável por fazer o request e tratar os dados recebidos da API e outro é responsável por fazer o envio do email.
@@ -31,7 +30,6 @@ Recebo os argumentos e trato cada um deles -> Pego a lista de emails e guardo em
 
 <h3>Diagrama UML</h3>
 <img src="https://github.com/user-attachments/assets/2805a3e6-a4e0-4d84-9d73-7e1565a9a50c"></img>
-
 
 <h3>Dificuldades</h3>
 <ul>
