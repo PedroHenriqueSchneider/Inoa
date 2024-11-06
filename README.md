@@ -29,6 +29,10 @@ Models: para tratamento dos dados recebidos da API.
 <h3>Detalhamento</h3>
 Recebo os argumentos e trato cada um deles -> Pego a lista de emails e guardo em um vetor -> instancio minhas duas classes para o alerta dos emails -> faço o esquema para que o terminal continue fazendo as requisições e finalize apenas quando solicitado -> Faço a chamada do método GetQuoteAsync para requisição da api -> Esse método chama meu service para que a requisição seja feita e os dados sejam tratados -> Com os dados da ação chamo UpdateStockPrice que atualiza o preço da ação e inicia o processo de notificação dos emails -> meu Subject (StockMarketNotification) notifica seus observers (EmailAlert) caso o preço da ação esteja acima do teto desejado, ou o preço da ação esteja abaixo do piso desejado -> Atribui as configurações de Smtp e faz o envio dos emails com o método Send da classe SendEmail.
 
+<h3>Diagrama UML</h3>
+![image](https://github.com/user-attachments/assets/2805a3e6-a4e0-4d84-9d73-7e1565a9a50c)
+
+
 <h3>Dificuldades</h3>
 <ul>
 <li>Escolha da API, por incrível que pareça, essa missão foi mais dificil do que pensava, tinham algumas APIs com documentações confusas, muitas cobravam pelo serviço e poucas ofereciam o princípal que eu buscava, o preço da ação.</li>
