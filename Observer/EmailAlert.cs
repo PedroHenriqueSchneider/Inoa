@@ -30,14 +30,14 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
             {
                 foreach (var email in _destinationEmail)
                 {
-                    SendEmail(email, "Inoa te aconselha... Venda! ", $"O preço de {_quoteName} está acima de {_sellQuote:F2} com um preço de mercado de: {regularMarketPrice:F2}");
+                    SendEmail(email, "Inoa te aconselha... Venda! ", $"O preço de {_quoteName} está acima de {_sellQuote:F2} com um preço de mercado de {regularMarketPrice:F2}, te aconselhamos a venda dessa ação.");
                 }
             }
             else if (regularMarketPrice <= _buyQuote)
             {
                 foreach (var email in _destinationEmail)
                 {
-                    SendEmail(email, "Inoa te aconselha... Compre!", $"O preço de {_quoteName} está abaixo de {_buyQuote:F2} com um preço de mercado de {regularMarketPrice:F2}");
+                    SendEmail(email, "Inoa te aconselha... Compre!", $"O preço de {_quoteName} está abaixo de {_buyQuote:F2} com um preço de mercado de {regularMarketPrice:F2}, te aconselhamos a compra dessa ação.");
                 }
             }
             else
