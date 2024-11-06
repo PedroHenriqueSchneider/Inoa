@@ -1,4 +1,4 @@
-# Inoa
+# INOA
 Desenvolvimento de um sistema para a empresa INOA, cujo objetivo é notificar sobre a queda ou aumento do preço de uma ação, considerando limites superiores e inferiores.
 
 ***********
