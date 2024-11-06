@@ -44,11 +44,16 @@ namespace InoaB3.Services
         {
             try
             {
+                // template
+                string template = "./Templates/email-template.html";
+
+                string htmlTemplate = File.ReadAllText(template);
+
                 MailMessage message = new()
                 {
                     From = new MailAddress(_smtpUserName),
                     Subject = subject,
-                    Body = body,
+                    Body = htmlTemplate.Replace("{body}", body),
                     IsBodyHtml = true,
                     Priority = MailPriority.Normal
                 };

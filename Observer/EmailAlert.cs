@@ -5,8 +5,6 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
     private readonly double _buyQuote = buyQuote;
     private readonly string _quoteName = quoteName;
     private readonly List<string> _destinationEmail = destinationEmail;
-    private bool _hasSentSellAlert = false;
-    private bool _hasSentBuyAlert = false;
 
     public void OnNext(double regularMarketPrice)
     {
@@ -28,29 +26,23 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
     {
         try
         {
-            if (regularMarketPrice >= _sellQuote && !_hasSentSellAlert)
+            if (regularMarketPrice >= _sellQuote)
             {
                 foreach (var email in _destinationEmail)
                 {
-                    SendEmail(email, "Aconselha-se vender", $"O preço de {_quoteName} está acima de {_sellQuote}: {regularMarketPrice}");
+                    SendEmail(email, "Inoa te aconselha... Venda! ", $"O preço de {_quoteName} está acima de {_sellQuote:F2} com um preço de mercado de: {regularMarketPrice:F2}");
                 }
-                _hasSentSellAlert = true;
-                _hasSentBuyAlert = false;
             }
-            else if (regularMarketPrice <= _buyQuote && !_hasSentBuyAlert)
+            else if (regularMarketPrice <= _buyQuote)
             {
                 foreach (var email in _destinationEmail)
                 {
-                    SendEmail(email, "Aconselha-se comprar", $"O preço de {_quoteName} está abaixo de {_buyQuote}: {regularMarketPrice}");
+                    SendEmail(email, "Inoa te aconselha... Compre!", $"O preço de {_quoteName} está abaixo de {_buyQuote:F2} com um preço de mercado de {regularMarketPrice:F2}");
                 }
-                _hasSentBuyAlert = true;
-                _hasSentSellAlert = false;
             }
             else
             {
-                Console.WriteLine($"Preço de {_quoteName} está dentro da faixa desejada: {regularMarketPrice}");
-                _hasSentSellAlert = false;
-                _hasSentBuyAlert = false;
+                Console.WriteLine($"Preço de {_quoteName} está dentro da faixa desejada com um preço de mercado de {regularMarketPrice}");
             }
         }
         catch (Exception ex)
@@ -63,9 +55,9 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
     {
         try
         {
-            Console.WriteLine($"Enviando alerta: {subject}");
+            Console.WriteLine($"Enviando alerta");
             InoaB3.Services.SendEmail.Send(email, subject, body); // ja que é estatico eu não preciso instanciar o objeto
-            Console.WriteLine($"Alerta enviado: {subject}");
+            Console.WriteLine($"Alerta enviado");
         }
         catch (Exception ex)
         {

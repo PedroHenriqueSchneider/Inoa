@@ -27,19 +27,10 @@ public class StockMarketNotification : ISubject
         }
     }
 
-    public void Detach(IObserver<double> observer)
-    {
-        if (_observers.Contains(observer))
-        {
-            _observers.Remove(observer);
-        }
-    }
-
     public void UpdateStockPrice(double stockPrice)
     {
         try
         {
-            Console.WriteLine("Necessário atualizar o preço da ação");
             _stockPrice = stockPrice;
 
             foreach (var observer in _observers)

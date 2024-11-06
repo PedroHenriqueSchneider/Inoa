@@ -43,8 +43,8 @@ class Program
                 emails.Add(email.Value);
         }
 
+        stockNotification = new StockMarketNotification(quoteName, 0); 
         emailAlert = new EmailAlert(quoteName, sellPrice, buyPrice, emails);
-        stockNotification = new StockMarketNotification(quoteName, 0); // Valor inicial
 
         var timer = new Timer(async _ => await NotifyPeriodical(), null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
 
@@ -59,14 +59,14 @@ class Program
             string endpoint = $"{quoteName}?modules=summaryProfile";
             Quote quote = await StockMarketManager.GetQuoteAsync(endpoint);
 
+            Console.WriteLine($"Resultado da chamada da API: {quote.RegularMarketPrice}");
+
             if(stockNotification != null){
                 stockNotification.UpdateStockPrice(quote.RegularMarketPrice);
                 if(emailAlert != null)
                     stockNotification.Attach(emailAlert);
                 stockNotification.UpdateStockPrice(quote.RegularMarketPrice); // Envia o alerta, se aplicável
             }
-
-            Console.WriteLine($"Resultado da chamada da API: {quote.RegularMarketPrice}");
 
             if (quote.RegularMarketPrice >= sellPrice)
             {
