@@ -1,8 +1,8 @@
 # InoaB3
-# Desenvolvimento de um sistema para a empresa INOA, cujo objetivo é notificar sobre a queda ou aumento do preço de uma ação, considerando limites superiores e inferiores.
+Desenvolvimento de um sistema para a empresa INOA, cujo objetivo é notificar sobre a queda ou aumento do preço de uma ação, considerando limites superiores e inferiores.
 
 ***********
-<h1>Implementação</h1>
+<h3>Implementação</h3>
 Implementar esse sistema foi um desafio para mim, tendo em mente que não tinha nenhuma experiência prévia com C#, mas como sua prioridade nas linguagens era alta e eu estava disposto a enfrentar mais um desafio. Considerando que basta saber lógica de programação e ter dedicação para conseguir aprender qualquer linguagem, (o fato de eu saber POO me ajudou também) decidi avançar com a escolha. Busquei amigos que cursam economia, aprendi com eles sobre média móvel, como forma de entender melhor o funcionamento e desenvolver alguma feature extra relacionada a isso. 
 
 Inicialmente me atentei com duas importantes questões antes de iniciar o projeto, qual arquitetura e qual design pattern eu utilizaria.
@@ -10,7 +10,7 @@ Optei por usar uma arquitetura próxima a arquitetura por camadas e mirei direto
 
 Desenhei o projeto e foquei em cumprir as features principais, já que eu não tinha muito tempo em relação ao tanto que sabia da linguagem.
 
-<h2>Fluxo</h2>
+<h3>Fluxo</h3>
 O fluxo que projetei foi: Receber a entrada dos dados, fazer o request para API, tratar os dados recebidos como resposta, implementar o padrão observer, fazer o envio de emails, consolidar tudo isso de forma a obter consistência e caso sobrasse tempo, desenvolver alguma feature extra.
 
 Busquei uma API que fosse gratis e me servisse, então fiz uso da API da brapi: https://brapi.dev e utilizei o maileroo: https://maileroo.com/ como SMTP para envio dos emails.
