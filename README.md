@@ -39,6 +39,29 @@ Recebo os argumentos e trato cada um deles -> Pego a lista de emails e guardo em
 </ul>
 
 <h3>Referências</h3>
-Alguns dos sites usados como base para o desenvolvimento: https://refactoring.guru/pt-br/design-patterns/csharp, https://learn.microsoft.com/pt-br/dotnet/csharp/tour-of-csharp/overview https://learn.microsoft.com/pt-br/dotnet/core/tools/?tabs=netcore2x https://learn.microsoft.com/pt-br/visualstudio/get-started/csharp/tutorial-console?view=vs-2022 https://learn.microsoft.com/en-us/aspnet/web-api/overview/advanced/calling-a-web-api-from-a-net-client https://medium.com/@tajbiulrawol/understanding-the-observer-pattern-enhancing-notifications-in-c-applications-ace780de166b https://maileroo.com/blog/send-emails-in-c-net-via-smtp/
+Alguns dos sites usados como base para o desenvolvimento: 
+<ul>
+<li>
+https://refactoring.guru/pt-br/design-patterns/csharp
+</li> 
+<li>
+https://learn.microsoft.com/pt-br/dotnet/csharp/tour-of-csharp/overview
+</li>
+<li>
+https://learn.microsoft.com/pt-br/dotnet/core/tools/?tabs=netcore2x
+</li>
+<li>
+https://learn.microsoft.com/pt-br/visualstudio/get-started/csharp/tutorial-console?view=vs-2022
+</li>
+<li>
+https://learn.microsoft.com/en-us/aspnet/web-api/overview/advanced/calling-a-web-api-from-a-net-client
+</li>
+<li>
+https://medium.com/@tajbiulrawol/understanding-the-observer-pattern-enhancing-notifications-in-c-applications-ace780de166b
+</li>
+<li>
+https://maileroo.com/blog/send-emails-in-c-net-via-smtp/
+</li>
+</ul>
 
 
