@@ -26,14 +26,14 @@ public class EmailAlert(string quoteName, double sellQuote, double buyQuote, Lis
     {
         try
         {
-            if (regularMarketPrice >= _sellQuote)
+            if (regularMarketPrice > _sellQuote)
             {
                 foreach (var email in _destinationEmail)
                 {
                     SendEmail(email, "Inoa te aconselha... Venda! ", $"O preço de {_quoteName} está acima de {_sellQuote:F2} com um preço de mercado de {regularMarketPrice:F2}, te aconselhamos a venda dessa ação.");
                 }
             }
-            else if (regularMarketPrice <= _buyQuote)
+            else if (regularMarketPrice < _buyQuote)
             {
                 foreach (var email in _destinationEmail)
                 {
