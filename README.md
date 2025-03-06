@@ -3,7 +3,7 @@ Desenvolvimento de um sistema para a empresa INOA, cujo objetivo é notificar so
 
 ***********
 <h3>Implementação</h3>
-Implementar esse sistema foi um desafio para mim, tendo em mente que não tinha nenhuma experiência prévia com C#, mas como sua prioridade nas linguagens era alta e eu estava disposto a enfrentar mais um desafio. Considerando que basta saber lógica de programação e ter dedicação para conseguir aprender qualquer linguagem, (o fato de eu saber POO me ajudou também) decidi avançar com a escolha. Busquei amigos que cursam economia, aprendi com eles sobre média móvel, como forma de entender melhor o funcionamento e desenvolver alguma feature extra relacionada a isso. 
+Implementar esse sistema foi um desafio para mim, tendo em mente que não tinha nenhuma experiência prévia com C#, mas como sua prioridade nas linguagens era alta eu estava disposto a enfrentar mais um desafio. Considerando que basta saber lógica de programação e ter dedicação para conseguir aprender qualquer linguagem, (o fato de eu saber POO me ajudou também) decidi avançar com a escolha. Busquei amigos que cursam economia, aprendi com eles sobre média móvel, como forma de entender melhor o funcionamento e desenvolver alguma feature extra relacionada a isso. 
 
 Inicialmente me atentei com duas importantes questões antes de iniciar o projeto, qual arquitetura e qual design pattern eu utilizaria.
 Optei por usar uma arquitetura próxima a arquitetura por camadas e mirei direto no design pattern observer, já que sabia que ele é intimamente ligado com o envio de notificações.
